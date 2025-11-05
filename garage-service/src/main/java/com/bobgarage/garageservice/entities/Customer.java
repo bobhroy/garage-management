@@ -2,16 +2,17 @@ package com.bobgarage.garageservice.entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
 import java.util.*;
 
+@Entity
 @Getter
 @Setter
-@Entity
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Table(name = "customers")
 public class Customer {
     @Id
@@ -42,6 +43,10 @@ public class Customer {
     @Column(name = "created_by")
     private String createdBy;
 
-    @OneToMany(mappedBy = "customer", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
+    @OneToMany(mappedBy = "customer",
+            cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
+            orphanRemoval = true,
+            fetch = FetchType.LAZY)
+    @Builder.Default
     private Set<Address> addresses = new HashSet<>();
 }
