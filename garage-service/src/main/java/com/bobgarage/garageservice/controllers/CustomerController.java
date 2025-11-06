@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 import java.util.UUID;
@@ -47,13 +48,18 @@ public class CustomerController {
     }
 
     @PostMapping
-    public CustomerDto addCustomer(@RequestBody RegisterCustomerRequest request) {
+    public ResponseEntity<CustomerDto> createCustomer(
+            @RequestBody RegisterCustomerRequest request,
+            UriComponentsBuilder uriBuilder) {
         var customer = customerMapper.toEntity(request);
         var address = addressMapper.toEntity(request.getAddress());
+
         customer.addAddress(address);
         customerRepository.save(customer);
 
         var customerDto = customerMapper.toDto(customer);
-        return customerDto;
+        var uri =  uriBuilder.path("/customers/{id}").buildAndExpand(customer.getId()).toUri();
+
+        return ResponseEntity.created(uri).body(customerDto);
     }
 }
