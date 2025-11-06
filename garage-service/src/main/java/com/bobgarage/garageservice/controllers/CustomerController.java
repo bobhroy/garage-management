@@ -1,7 +1,9 @@
 package com.bobgarage.garageservice.controllers;
 
 import com.bobgarage.garageservice.dtos.CustomerDto;
+import com.bobgarage.garageservice.dtos.RegisterCustomerRequest;
 import com.bobgarage.garageservice.entities.Customer;
+import com.bobgarage.garageservice.mappers.AddressMapper;
 import com.bobgarage.garageservice.mappers.CustomerMapper;
 import com.bobgarage.garageservice.repositories.CustomerRepository;
 import lombok.AllArgsConstructor;
@@ -18,6 +20,7 @@ import java.util.UUID;
 public class CustomerController {
     private final CustomerRepository customerRepository;
     private final CustomerMapper customerMapper;
+    private final AddressMapper addressMapper;
 
     @GetMapping
     public Iterable<CustomerDto> getAllCustomers(
@@ -41,5 +44,16 @@ public class CustomerController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(customerMapper.toDto(customer));
+    }
+
+    @PostMapping
+    public CustomerDto addCustomer(@RequestBody RegisterCustomerRequest request) {
+        var customer = customerMapper.toEntity(request);
+        var address = addressMapper.toEntity(request.getAddress());
+        customer.addAddress(address);
+        customerRepository.save(customer);
+
+        var customerDto = customerMapper.toDto(customer);
+        return customerDto;
     }
 }

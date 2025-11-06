@@ -3,6 +3,7 @@ package com.bobgarage.garageservice.entities;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -16,7 +17,7 @@ import java.util.*;
 @Table(name = "customers")
 public class Customer {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id")
     private UUID id;
 
@@ -33,9 +34,9 @@ public class Customer {
     private String email;
 
     @Column(name = "loyalty_points")
-    private Integer loyaltyPoints = 0;
+    private Integer loyaltyPoints;
 
-    @NotNull
+    @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
@@ -48,5 +49,15 @@ public class Customer {
             orphanRemoval = true,
             fetch = FetchType.LAZY)
     @Builder.Default
-    private Set<Address> addresses = new HashSet<>();
+    private List<Address> addresses = new ArrayList<>();
+
+    public void addAddress(Address address) {
+        addresses.add(address);
+        address.setCustomer(this);
+    }
+
+    public void removeAddress(Address address) {
+        addresses.remove(address);
+        address.setCustomer(null);
+    }
 }

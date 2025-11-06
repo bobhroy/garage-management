@@ -1,10 +1,8 @@
 package com.bobgarage.garageservice.dtos;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 
-@AllArgsConstructor
-@Getter
+@Data
 public class AddressDto {
     public String street;
     public String city;
