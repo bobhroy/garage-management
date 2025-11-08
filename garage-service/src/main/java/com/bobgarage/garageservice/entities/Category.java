@@ -21,7 +21,7 @@ public class Category {
     @Column(name = "id")
     private UUID id;
 
-    @NotNull
+    @NotNull(message = "Name is required")
     @Column(name = "name")
     private String name;
 

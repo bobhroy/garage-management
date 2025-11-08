@@ -54,7 +54,7 @@ public class CustomerController {
 
     @PostMapping
     public ResponseEntity<CustomerDto> createCustomer(
-            @RequestBody RegisterCustomerRequest request,
+            @Valid @RequestBody RegisterCustomerRequest request,
             UriComponentsBuilder uriBuilder) {
         var customer = customerMapper.toEntity(request);
         var address = addressMapper.toEntity(request.getAddress());
@@ -112,5 +112,4 @@ public class CustomerController {
         customerRepository.delete(customer);
         return ResponseEntity.noContent().build();
     }
-
 }

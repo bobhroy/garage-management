@@ -1,7 +1,6 @@
 package com.bobgarage.garageservice.entities;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.util.UUID;
@@ -19,19 +18,15 @@ public class Address {
     @Column(name = "id")
     private UUID id;
 
-    @NotNull
     @Column(name = "street")
     private String street;
 
-    @NotNull
     @Column(name = "city")
     private String city;
 
-    @NotNull
     @Column(name = "state")
     private String state;
 
-    @NotNull
     @Column(name = "zip")
     private String zip;
 

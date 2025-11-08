@@ -1,11 +1,22 @@
 package com.bobgarage.garageservice.dtos;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
 public class AddressDto {
+    @NotBlank(message = "Street is required")
+    @Size(max = 255, message = "Street must be less than 255 characters")
     private String street;
+
+    @NotBlank(message = "City is required")
+    @Size(max = 255, message = "City must be less than 255 characters")
     private String city;
-    private String zip;
+
+    @NotBlank(message = "State is required")
     private String state;
+
+    @NotBlank(message = "Zipcode is required")
+    private String zip;
 }

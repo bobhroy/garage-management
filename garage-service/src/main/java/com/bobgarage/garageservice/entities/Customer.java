@@ -1,7 +1,6 @@
 package com.bobgarage.garageservice.entities;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -21,15 +20,12 @@ public class Customer {
     @Column(name = "id")
     private UUID id;
 
-    @NotNull
     @Column(name = "name")
     private String name;
 
-    @NotNull
     @Column(name = "phone")
     private String phone;
 
-    @NotNull
     @Column(name = "email")
     private String email;
 
@@ -40,7 +36,6 @@ public class Customer {
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
-    @NotNull
     @Column(name = "created_by")
     private String createdBy;
 
@@ -54,10 +49,5 @@ public class Customer {
     public void addAddress(Address address) {
         addresses.add(address);
         address.setCustomer(this);
-    }
-
-    public void removeAddress(Address address) {
-        addresses.remove(address);
-        address.setCustomer(null);
     }
 }

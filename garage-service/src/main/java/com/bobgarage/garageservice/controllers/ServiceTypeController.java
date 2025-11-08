@@ -5,6 +5,7 @@ import com.bobgarage.garageservice.entities.ServiceType;
 import com.bobgarage.garageservice.mappers.ServiceTypeMapper;
 import com.bobgarage.garageservice.repositories.CategoryRepository;
 import com.bobgarage.garageservice.repositories.ServiceTypeRepository;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -46,7 +47,7 @@ public class ServiceTypeController {
 
     @PostMapping
     public ResponseEntity<ServiceTypeDto> createServiceType(
-            @RequestBody ServiceTypeDto serviceTypeDto,
+            @Valid @RequestBody ServiceTypeDto serviceTypeDto,
             UriComponentsBuilder uriBuilder) {
         var category = categoryRepository.findById(serviceTypeDto.getCategoryId()).orElse(null);
         if (category == null) {
