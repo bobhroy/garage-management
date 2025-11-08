@@ -13,6 +13,6 @@ public interface ServiceTypeRepository  extends JpaRepository<ServiceType, UUID>
     List<ServiceType> findByCategoryId(UUID categoryId);
 
     @EntityGraph(attributePaths = "category")
-    @Query("SELECT p FROM ServiceType p")
+    @Query("SELECT s FROM ServiceType s")
     List<ServiceType> findAllWithCategory();
 }

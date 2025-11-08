@@ -104,7 +104,7 @@ public class CustomerController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<CustomerDto> deleteCustomer(@PathVariable UUID id) {
+    public ResponseEntity<Void> deleteCustomer(@PathVariable UUID id) {
         var customer = customerRepository.findById(id).orElse(null);
         if (customer == null) {
             return ResponseEntity.notFound().build();

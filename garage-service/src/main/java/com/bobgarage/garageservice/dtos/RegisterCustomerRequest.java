@@ -4,9 +4,9 @@ import lombok.Data;
 
 @Data
 public class RegisterCustomerRequest {
-    public String name;
-    public String email;
-    public String phone;
-    public String createdBy;
-    public AddressDto address;
+    private String name;
+    private String email;
+    private String phone;
+    private String createdBy;
+    private AddressDto address;
 }

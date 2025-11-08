@@ -16,7 +16,7 @@ import java.util.UUID;
 @Table(name = "service_types")
 public class ServiceType {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id")
     private UUID id;
 

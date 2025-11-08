@@ -9,13 +9,13 @@ import java.util.UUID;
 
 @Data
 public class CustomerDto {
-    public UUID id;
-    public String name;
-    public String email;
-    public String phone;
-    public Integer loyaltyPoints;
+    private UUID id;
+    private String name;
+    private String email;
+    private String phone;
+    private Integer loyaltyPoints;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    public LocalDateTime createdAt;
-    public String createdBy;
-    public List<AddressDto> addresses;
+    private LocalDateTime createdAt;
+    private String createdBy;
+    private List<AddressDto> addresses;
 }

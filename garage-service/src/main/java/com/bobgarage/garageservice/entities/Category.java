@@ -17,7 +17,7 @@ import java.util.UUID;
 @Table(name = "categories")
 public class Category {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id")
     private UUID id;
 
@@ -27,12 +27,4 @@ public class Category {
 
     @OneToMany(mappedBy = "category")
     private Set<ServiceType> serviceTypes = new HashSet<>();
-
-    public Category(String name) {
-        this.name = name;
-    }
-
-    public Category(UUID id) {
-        this.id = id;
-    }
 }

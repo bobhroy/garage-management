@@ -7,10 +7,10 @@ import java.util.UUID;
 
 @Data
 public class ServiceTypeDto {
-    public UUID id;
-    public String name;
-    public String description;
-    public BigDecimal price;
-    public Integer durationMinutes;
-    public UUID categoryId;
+    private UUID id;
+    private String name;
+    private String description;
+    private BigDecimal price;
+    private Integer durationMinutes;
+    private UUID categoryId;
 }
