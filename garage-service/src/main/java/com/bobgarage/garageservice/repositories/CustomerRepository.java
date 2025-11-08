@@ -13,4 +13,6 @@ import java.util.UUID;
 public interface CustomerRepository extends JpaRepository<Customer, UUID> {
     @Query("SELECT DISTINCT c FROM Customer c LEFT JOIN FETCH c.addresses")
     List<Customer> findAllWithAddresses(Sort sort);
+
+    boolean existsByEmail(String email);
 }

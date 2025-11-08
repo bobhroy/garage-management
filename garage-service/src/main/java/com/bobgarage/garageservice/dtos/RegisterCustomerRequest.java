@@ -1,5 +1,6 @@
 package com.bobgarage.garageservice.dtos;
 
+import com.bobgarage.garageservice.validation.Lowercase;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -15,6 +16,7 @@ public class RegisterCustomerRequest {
 
     @NotBlank(message = "Email is required")
     @Email(message = "Email must be valid")
+    @Lowercase(message = "Email must be in lowercase")
     private String email;
 
     @NotBlank(message = "Phone number is required")

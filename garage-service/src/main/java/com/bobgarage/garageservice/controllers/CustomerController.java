@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -53,9 +54,14 @@ public class CustomerController {
     }
 
     @PostMapping
-    public ResponseEntity<CustomerDto> createCustomer(
+    public ResponseEntity<?> registerCustomer(
             @Valid @RequestBody RegisterCustomerRequest request,
             UriComponentsBuilder uriBuilder) {
+        if (customerRepository.existsByEmail(request.getEmail())) {
+            return ResponseEntity.badRequest().body(
+                    Map.of("email", "Email is already registered")
+            );
+        }
         var customer = customerMapper.toEntity(request);
         var address = addressMapper.toEntity(request.getAddress());
 
