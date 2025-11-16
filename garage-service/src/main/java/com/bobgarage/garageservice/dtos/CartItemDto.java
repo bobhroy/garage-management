@@ -5,9 +5,11 @@ import lombok.Data;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Data
 public class CartItemDto {
+    private UUID serviceTypeId;
     private String serviceType;
     private BigDecimal price;
     private String technician;

@@ -1,5 +1,6 @@
 package com.bobgarage.garageservice.entities;
 
+import com.bobgarage.garageservice.exceptions.DuplicateCartItemException;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -45,20 +46,16 @@ public class Cart {
 
     public CartItem addItem(ServiceType serviceType, String technician){
         var cartItem = getItem(serviceType.getId());
+        if(cartItem != null) throw new DuplicateCartItemException();
 
-        // if item doesn't exist already
-        if (cartItem == null) {
-            cartItem = new CartItem();
-            cartItem.setServiceType(serviceType);
-            cartItem.setTechnician(technician);
-            cartItem.setStatus("OPEN");
-            cartItem.setCart(this);
-            items.add(cartItem);
+        cartItem = new CartItem();
+        cartItem.setServiceType(serviceType);
+        cartItem.setTechnician(technician);
+        cartItem.setStatus("OPEN");
+        cartItem.setCart(this);
+        items.add(cartItem);
 
-            return cartItem;
-        }
-
-        return null;
+        return cartItem;
     }
 
     public void removeItem(UUID serviceTypeId){
