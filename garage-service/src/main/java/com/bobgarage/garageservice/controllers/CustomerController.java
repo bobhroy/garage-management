@@ -4,20 +4,17 @@ import com.bobgarage.garageservice.dtos.AddressDto;
 import com.bobgarage.garageservice.dtos.CustomerDto;
 import com.bobgarage.garageservice.dtos.RegisterCustomerRequest;
 import com.bobgarage.garageservice.dtos.UpdateCustomerRequest;
-import com.bobgarage.garageservice.entities.Customer;
-import com.bobgarage.garageservice.mappers.AddressMapper;
-import com.bobgarage.garageservice.mappers.CustomerMapper;
-import com.bobgarage.garageservice.repositories.AddressRepository;
-import com.bobgarage.garageservice.repositories.CustomerRepository;
+import com.bobgarage.garageservice.exceptions.CustomerNotFoundException;
+import com.bobgarage.garageservice.exceptions.DuplicateEmailException;
+import com.bobgarage.garageservice.services.CustomerService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -26,98 +23,64 @@ import java.util.UUID;
 @RequestMapping("/customers")
 @Tag(name = "Customers")
 public class CustomerController {
-    private final CustomerRepository customerRepository;
-    private final CustomerMapper customerMapper;
-    private final AddressMapper addressMapper;
-    private final AddressRepository addressRepository;
+    private final CustomerService customerService;
 
     @GetMapping
     public Iterable<CustomerDto> getAllCustomers(
             @RequestParam(name = "sort", required = false) String sort
     ) {
-        List<Customer> customers;
-
-        if (sort == null || sort.isEmpty()) {
-            customers = customerRepository.findAll();
-        }
-        else {
-            customers = customerRepository.findAllWithAddresses(Sort.by(sort));
-        }
-        return customers.stream().map(customerMapper::toDto).toList();
+        return customerService.getAllCustomers(sort);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CustomerDto> getCustomer(@PathVariable UUID id) {
-        var customer = customerRepository.findById(id).orElse(null);
-        if (customer == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(customerMapper.toDto(customer));
+    public CustomerDto getCustomer(@PathVariable UUID id) {
+        return customerService.getCustomerById(id);
     }
 
     @PostMapping
-    public ResponseEntity<?> registerCustomer(
+    public ResponseEntity<CustomerDto> registerCustomer(
             @Valid @RequestBody RegisterCustomerRequest request,
             UriComponentsBuilder uriBuilder) {
-        if (customerRepository.existsByEmail(request.getEmail())) {
-            return ResponseEntity.badRequest().body(
-                    Map.of("email", "Email is already registered")
-            );
-        }
-        var customer = customerMapper.toEntity(request);
-        var address = addressMapper.toEntity(request.getAddress());
 
-        customer.addAddress(address);
-        customerRepository.save(customer);
-
-        var customerDto = customerMapper.toDto(customer);
-        var uri =  uriBuilder.path("/customers/{id}").buildAndExpand(customer.getId()).toUri();
+        var customerDto = customerService.addCustomer(request);
+        var uri =  uriBuilder.path("/customers/{id}").buildAndExpand(customerDto.getId()).toUri();
 
         return ResponseEntity.created(uri).body(customerDto);
     }
 
-    @PostMapping("/{id}/add-address")
+    @PostMapping("/{id}/addresses")
     public ResponseEntity<CustomerDto> addAddressToCustomer(
             @PathVariable UUID id,
             @Valid @RequestBody AddressDto addressDto,
             UriComponentsBuilder uriBuilder
     ) {
-        var customer = customerRepository.findById(id).orElse(null);
-        if (customer == null) {
-            return ResponseEntity.notFound().build();
-        }
-
-        var address = addressMapper.toEntity(addressDto);
-        address.setCustomer(customer);
-        customer.addAddress(address);
-        addressRepository.save(address);
-
-        var customerDto = customerMapper.toDto(customer);
-        var uri =  uriBuilder.path("/customers/{id}").buildAndExpand(customer.getId()).toUri();
+        var customerDto = customerService.addAddress(id, addressDto);
+        var uri =  uriBuilder.path("/customers/{id}").buildAndExpand(customerDto.getId()).toUri();
 
         return ResponseEntity.created(uri).body(customerDto);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CustomerDto> updateCustomer(
+    public CustomerDto updateCustomer(
             @PathVariable(name = "id") UUID id,
             @RequestBody UpdateCustomerRequest request) {
-        var customer = customerRepository.findById(id).orElse(null);
-        if (customer == null) {
-            return ResponseEntity.notFound().build();
-        }
-        customerMapper.update(request, customer);
-        customerRepository.save(customer);
-        return ResponseEntity.ok(customerMapper.toDto(customer));
+
+        return customerService.updateCustomer(id, request);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCustomer(@PathVariable UUID id) {
-        var customer = customerRepository.findById(id).orElse(null);
-        if (customer == null) {
-            return ResponseEntity.notFound().build();
-        }
-        customerRepository.delete(customer);
+        customerService.deleteCustomer(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @ExceptionHandler(CustomerNotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleCustomerNotFound(){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "Customer not found."));
+    }
+
+    @ExceptionHandler(DuplicateEmailException.class)
+    public ResponseEntity<Map<String, String>> handleDuplicateEmailFound(){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", "Email is already registered."));
     }
 }
