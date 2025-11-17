@@ -5,6 +5,7 @@ import com.bobgarage.garageservice.entities.ServiceType;
 import com.bobgarage.garageservice.mappers.ServiceTypeMapper;
 import com.bobgarage.garageservice.repositories.CategoryRepository;
 import com.bobgarage.garageservice.repositories.ServiceTypeRepository;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @RestController
 @RequestMapping("/service_types")
+@Tag(name = "Service Types")
 public class ServiceTypeController {
     private final ServiceTypeRepository serviceTypeRepository;
     private final ServiceTypeMapper serviceTypeMapper;

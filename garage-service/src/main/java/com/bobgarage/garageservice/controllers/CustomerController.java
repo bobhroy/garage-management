@@ -9,6 +9,7 @@ import com.bobgarage.garageservice.mappers.AddressMapper;
 import com.bobgarage.garageservice.mappers.CustomerMapper;
 import com.bobgarage.garageservice.repositories.AddressRepository;
 import com.bobgarage.garageservice.repositories.CustomerRepository;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Sort;
@@ -23,6 +24,7 @@ import java.util.UUID;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/customers")
+@Tag(name = "Customers")
 public class CustomerController {
     private final CustomerRepository customerRepository;
     private final CustomerMapper customerMapper;
