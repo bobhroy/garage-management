@@ -12,7 +12,6 @@ CREATE TABLE cart_items
     cart_id         BINARY(16)                               NOT NULL,
     service_type_id BINARY(16)                               NOT NULL,
     technician      VARCHAR(255)                             NULL,
-    status          CHAR(15)   DEFAULT ('OPEN')              NOT NULL,
     date_completed  TIMESTAMP                                NULL,
     CONSTRAINT cart_items_cart_service_type_unique
         UNIQUE (cart_id, service_type_id),

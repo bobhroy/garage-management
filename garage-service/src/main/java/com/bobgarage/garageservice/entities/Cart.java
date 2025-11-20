@@ -51,7 +51,6 @@ public class Cart {
         cartItem = new CartItem();
         cartItem.setServiceType(serviceType);
         cartItem.setTechnician(technician);
-        cartItem.setStatus("OPEN");
         cartItem.setCart(this);
         items.add(cartItem);
 

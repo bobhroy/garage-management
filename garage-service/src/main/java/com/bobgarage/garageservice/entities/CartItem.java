@@ -28,9 +28,6 @@ public class CartItem {
     @Column(name = "technician")
     private String technician;
 
-    @Column(name = "status")
-    private String status;
-
     @Column(name = "date_completed")
     private LocalDateTime dateCompleted;
 }

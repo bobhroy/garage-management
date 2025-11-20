@@ -3,7 +3,6 @@ package com.bobgarage.garageservice.controllers;
 import com.bobgarage.garageservice.dtos.AddServiceTypeToCartRequest;
 import com.bobgarage.garageservice.dtos.CartDto;
 import com.bobgarage.garageservice.dtos.CartItemDto;
-import com.bobgarage.garageservice.dtos.UpdateCartItemRequest;
 import com.bobgarage.garageservice.exceptions.CartNotFoundException;
 import com.bobgarage.garageservice.exceptions.DuplicateCartItemException;
 import com.bobgarage.garageservice.exceptions.ServiceTypeNotFoundException;
@@ -11,7 +10,6 @@ import com.bobgarage.garageservice.services.CartService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -53,15 +51,6 @@ public class CartController {
     @GetMapping("/{cartId}")
     public CartDto getCart(@PathVariable UUID cartId) {
         return cartService.getCart(cartId);
-    }
-
-    @PutMapping("/{cartId}/items/{serviceTypeId}")
-    public CartItemDto updateItem(
-            @PathVariable("cartId") UUID cartId,
-            @PathVariable("serviceTypeId") UUID serviceTypeId,
-            @Valid @RequestBody UpdateCartItemRequest request
-    ) {
-        return cartService.updateItem(cartId, serviceTypeId, request.getTechnician(), request.getStatus());
     }
 
     @DeleteMapping("/{cartId}/items/{serviceTypeId}")

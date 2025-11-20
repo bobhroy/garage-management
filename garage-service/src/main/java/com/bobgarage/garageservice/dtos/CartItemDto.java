@@ -13,7 +13,6 @@ public class CartItemDto {
     private String serviceType;
     private BigDecimal price;
     private String technician;
-    private String status;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private LocalDateTime dateCompleted;
 }

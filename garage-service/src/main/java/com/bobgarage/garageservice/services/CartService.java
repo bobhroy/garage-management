@@ -47,20 +47,6 @@ public class CartService {
         return cartMapper.toDto(cart);
     }
 
-    public CartItemDto updateItem(UUID cartId, UUID serviceTypeId, String technician, String status) {
-        var cart = cartRepository.getCartWithItems(cartId).orElse(null);
-        if (cart == null) throw new CartNotFoundException();
-
-        var cartItem = cart.getItem(serviceTypeId);
-        if (cartItem == null) throw new ServiceTypeNotFoundException();
-
-        cartItem.setTechnician(technician);
-        cartItem.setStatus(status);
-        cartRepository.save(cart);
-
-        return cartMapper.toDto(cartItem);
-    }
-
     public void removeItem(UUID cartId, UUID serviceTypeId) {
         var cart = cartRepository.getCartWithItems(cartId).orElse(null);
         if (cart == null) throw new CartNotFoundException();
