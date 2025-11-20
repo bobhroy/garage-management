@@ -9,11 +9,10 @@ service CheckoutService {
 }
 
 message CheckoutRequest {
-  string cartId = 1;         // <-- UUID as STRING
-  string paymentMethod = 2;
+  string customerId = 1;         // <-- UUID as STRING
 }
 
 message CheckoutResponse {
-  bool success = 1;
-  string orderId = 2;        // <-- UUID as STRING
+  string orderId = 1;        // <-- UUID as STRING
+  string status = 2;
 }
