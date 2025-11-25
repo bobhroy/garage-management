@@ -6,6 +6,7 @@ option java_outer_classname = "CheckoutProto";
 
 service CheckoutService {
   rpc Checkout (CheckoutRequest) returns (CheckoutResponse);
+  rpc ProcessPayment (ProcessPaymentRequest) returns (ProcessPaymentResponse);
 }
 
 message CheckoutRequest {
@@ -16,4 +17,14 @@ message CheckoutRequest {
 message CheckoutResponse {
   string orderId = 1;        // <-- UUID as STRING
   string status = 2;
+}
+
+// --- New messages for payment processing ---
+message ProcessPaymentRequest {
+  string orderId = 1;    // UUID as STRING
+}
+
+message ProcessPaymentResponse {
+  string orderId = 1;    // UUID as STRING
+  string status = 2;     // e.g., "PAID"
 }

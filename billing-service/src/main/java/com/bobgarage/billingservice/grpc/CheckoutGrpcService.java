@@ -1,8 +1,6 @@
 package com.bobgarage.billingservice.grpc;
 
-import billing.CheckoutRequest;
-import billing.CheckoutResponse;
-import billing.CheckoutServiceGrpc;
+import billing.*;
 import com.bobgarage.billingservice.order.Order;
 import com.bobgarage.billingservice.order.OrderRepository;
 import io.grpc.stub.StreamObserver;
@@ -10,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.devh.boot.grpc.server.service.GrpcService;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Slf4j
@@ -39,6 +38,38 @@ public class CheckoutGrpcService extends CheckoutServiceGrpc.CheckoutServiceImpl
                 .setStatus(newOrder.getStatus())
                 .build();
 
+        responseObserver.onNext(response);
+        responseObserver.onCompleted();
+    }
+
+    @Override
+    public void processPayment(
+            ProcessPaymentRequest request,
+            StreamObserver<ProcessPaymentResponse> responseObserver
+    ) {
+        log.info("Received payment process request: orderId={}",
+                request.getOrderId());
+
+        // Needs more refactoring for later to handle edge cases
+        ProcessPaymentResponse response = ProcessPaymentResponse.newBuilder()
+                .setOrderId(request.getOrderId())
+                .setStatus("Order Not Found")
+                .build();
+
+        Order updatedOrder = orderRepository.findById(UUID.fromString(request.getOrderId()))
+                .map(order -> {
+                    order.setStatus("PAID");
+                    order.setDateUpdated(LocalDateTime.now());
+                    return orderRepository.save(order);
+                })
+                .orElse(null);
+
+        if(updatedOrder != null){
+            response = ProcessPaymentResponse.newBuilder()
+                    .setOrderId(updatedOrder.getId().toString())
+                    .setStatus(updatedOrder.getStatus())
+                    .build();
+        }
         responseObserver.onNext(response);
         responseObserver.onCompleted();
     }
