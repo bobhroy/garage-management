@@ -20,6 +20,9 @@ public class Order {
     @Column(name = "customer_id")
     private UUID customerId;
 
+    @Column(name = "cart_id")
+    private UUID cartId;
+
     @Column(name = "status")
     private String status;
 

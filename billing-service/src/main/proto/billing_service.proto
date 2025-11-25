@@ -10,6 +10,7 @@ service CheckoutService {
 
 message CheckoutRequest {
   string customerId = 1;         // <-- UUID as STRING
+  string cartId = 2;         // <-- UUID as STRING
 }
 
 message CheckoutResponse {

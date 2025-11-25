@@ -29,6 +29,7 @@ public class CheckoutGrpcService extends CheckoutServiceGrpc.CheckoutServiceImpl
 
         var order = new Order();
         order.setCustomerId(UUID.fromString(request.getCustomerId()));
+        order.setCartId(UUID.fromString(request.getCartId()));
         order.setStatus("CREATED");
         var newOrder = orderRepository.save(order);
 

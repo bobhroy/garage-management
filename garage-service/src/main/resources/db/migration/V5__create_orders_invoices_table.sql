@@ -2,6 +2,7 @@ CREATE TABLE orders
 (
     id           BINARY(16) DEFAULT (UUID_TO_BIN(UUID())) NOT NULL,
     customer_id  BINARY(16)                               NOT NULL,
+    cart_id      BINARY(16)                               NOT NULL,
     status       CHAR(15)   DEFAULT ('CREATED')           NOT NULL,
     date_created TIMESTAMP  DEFAULT CURRENT_TIMESTAMP     NOT NULL,
     date_updated TIMESTAMP                                NULL,
