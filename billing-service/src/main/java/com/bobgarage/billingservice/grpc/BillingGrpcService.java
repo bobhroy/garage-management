@@ -13,16 +13,16 @@ import net.devh.boot.grpc.server.service.GrpcService;
 @Slf4j
 @GrpcService
 @AllArgsConstructor
-public class CheckoutGrpcService extends CheckoutServiceGrpc.CheckoutServiceImplBase {
+public class BillingGrpcService extends BillingServiceGrpc.BillingServiceImplBase {
 
     private final OrderService orderService;
 
     @Override
-    public void checkout(
-        CheckoutRequest request,
-        StreamObserver<CheckoutResponse> responseObserver
+    public void create(
+        CreateRequest request,
+        StreamObserver<CreateResponse> responseObserver
     ){
-        log.info("Received checkout request: customerId={}",
+        log.info("Received create request: customerId={}",
                 request.getCustomerId());
 
         var order = orderService.createOrder(
@@ -30,7 +30,7 @@ public class CheckoutGrpcService extends CheckoutServiceGrpc.CheckoutServiceImpl
                 request.getCartId());
 
         // Build gRPC response
-        CheckoutResponse response = CheckoutResponse.newBuilder()
+        CreateResponse response = CreateResponse.newBuilder()
                 .setOrderId(order.getId().toString())
                 .setStatus(order.getStatus())
                 .build();
