@@ -96,7 +96,7 @@
                 <artifactId>flyway-maven-plugin</artifactId>
                 <version>11.11.2</version>
                 <configuration>
-                    <url>jdbc:mysql://localhost:3306/garage?createDatabaseIfNotExist=true</url>
+                    <url>jdbc:mysql://garage-service-db:3306/db?createDatabaseIfNotExist=true</url>
                     <user>root</user>
                     <password>MyP@ssword!</password>
                 </configuration>

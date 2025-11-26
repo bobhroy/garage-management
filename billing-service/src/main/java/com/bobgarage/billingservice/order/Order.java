@@ -4,7 +4,10 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Getter
@@ -32,4 +35,24 @@ public class Order {
     @Column(name = "date_updated")
     private LocalDateTime dateUpdated;
 
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private Set<Invoice> items = new LinkedHashSet<>();
+
+    public Invoice getItem(String serviceTypeName){
+        return items.stream()
+                .filter(item -> item.getServiceTypeName().equalsIgnoreCase(serviceTypeName))
+                .findFirst()
+                .orElse(null);
+    }
+
+    public void addItem(String serviceTypeName, BigDecimal price){
+        var item = getItem(serviceTypeName);
+        if(item != null) return; // don't add duplicate items
+
+        item = new Invoice();
+        item.setOrder(this);
+        item.setServiceTypeName(serviceTypeName);
+        item.setPrice(price);
+        items.add(item);
+    }
 }
