@@ -1,6 +1,7 @@
 package com.bobgarage.garageservice.controllers;
 
 import com.bobgarage.garageservice.dtos.CreateOrderRequest;
+import com.bobgarage.garageservice.dtos.OrderDto;
 import com.bobgarage.garageservice.dtos.PayOrderRequest;
 import com.bobgarage.garageservice.exceptions.CartNotFoundException;
 import com.bobgarage.garageservice.exceptions.CustomerNotFoundException;
@@ -46,6 +47,11 @@ public class OrderController {
     {
         var response = orderService.payOrder(customerId, request);
         return ResponseEntity.ok(response.getStatus());
+    }
+
+    @GetMapping("/{id}")
+    public OrderDto getOrderById(@PathVariable UUID id) {
+        return orderService.getOrderById(id);
     }
 
     @ExceptionHandler(CustomerNotFoundException.class)
