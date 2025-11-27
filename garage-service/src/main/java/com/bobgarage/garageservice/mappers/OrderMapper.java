@@ -15,10 +15,6 @@ import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring")
 public interface OrderMapper {
-//    @Mapping(target = "customerName", source = "customer.name")
-//    @Mapping(target = "items", source = "order.items", qualifiedByName = "invoiceToDtoList")
-//    @Mapping(target = "totalPrice", expression = "java(order.getTotalPrice())")
-    //@Mapping(target = "customerName", source = "customer.name")
     @Mapping(target = "id", source = "order.id")
     @Mapping(target = "customerName", source = "customer.name")
     @Mapping(target = "status", source = "order.status")

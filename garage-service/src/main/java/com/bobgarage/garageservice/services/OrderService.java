@@ -45,7 +45,12 @@ public class OrderService {
         var order = orderRepository.findByIdAndCustomerId(request.getOrderId(), customer.getId()).orElse(null);
         if (order == null) throw new OrderNotFoundException();
 
-        return billingServiceGrpcClient.processPayment(order.getId());
+        var response = billingServiceGrpcClient.processPayment(order.getId());
+        if(response.getStatus().equalsIgnoreCase("paid")){
+            cartService.clearCart(order.getCartId());
+        }
+
+        return response;
     }
 
     public OrderDto getOrderById(UUID orderId) {
