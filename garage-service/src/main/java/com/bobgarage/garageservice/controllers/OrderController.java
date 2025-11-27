@@ -1,9 +1,11 @@
 package com.bobgarage.garageservice.controllers;
 
 import com.bobgarage.garageservice.dtos.CreateOrderRequest;
-import com.bobgarage.garageservice.grpc.BillingServiceGrpcClient;
-import com.bobgarage.garageservice.services.CartService;
-import com.bobgarage.garageservice.services.CustomerService;
+import com.bobgarage.garageservice.dtos.PayOrderRequest;
+import com.bobgarage.garageservice.exceptions.CartNotFoundException;
+import com.bobgarage.garageservice.exceptions.CustomerNotFoundException;
+import com.bobgarage.garageservice.exceptions.OrderNotFoundException;
+import com.bobgarage.garageservice.services.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -22,28 +24,42 @@ import java.util.UUID;
 @Tag(name = "Orders")
 public class OrderController {
 
-    private final CustomerService customerService;
-    private final CartService cartService;
-    private final BillingServiceGrpcClient billingServiceGrpcClient;
+    private final OrderService orderService;
 
     @PostMapping("/{customerId}/create")
     @Operation(summary = "Create a new billing account.")
-    public ResponseEntity<?> createOrder(
+    public ResponseEntity<Map<String, String>> createOrder(
             @Parameter(description = "The ID of the customer.")
             @PathVariable UUID customerId,
             @Valid @RequestBody CreateOrderRequest request)
     {
-        var customer = customerService.getCustomerById(customerId);
-        if (customer == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", "Customer not found."));
-        }
-
-        var cart = cartService.getCart(request.getCartId());
-        if (cart == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", "Cart not found."));
-        }
-
-        var response = billingServiceGrpcClient.createBillingAccount(customer.getId(), cart.getId());
+        var response = orderService.createOrder(customerId, request);
         return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("orderId", response.getOrderId()));
+    }
+
+    @PostMapping("/{customerId}/process-payment")
+    @Operation(summary = "Create a new billing account.")
+    public ResponseEntity<String> payOrder(
+            @Parameter(description = "The ID of the customer.")
+            @PathVariable UUID customerId,
+            @Valid @RequestBody PayOrderRequest request)
+    {
+        var response = orderService.payOrder(customerId, request);
+        return ResponseEntity.ok(response.getStatus());
+    }
+
+    @ExceptionHandler(CustomerNotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleCustomerNotFound(){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "Customer not found."));
+    }
+
+    @ExceptionHandler(CartNotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleCartNotFound(){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "Cart not found."));
+    }
+
+    @ExceptionHandler(OrderNotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleOrderNotFound(){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "Order not found."));
     }
 }

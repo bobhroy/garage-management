@@ -1,8 +1,6 @@
 package com.bobgarage.garageservice.grpc;
 
-import billing.BillingServiceGrpc;
-import billing.CreateRequest;
-import billing.CreateResponse;
+import billing.*;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import lombok.extern.slf4j.Slf4j;
@@ -37,6 +35,16 @@ public class BillingServiceGrpcClient {
                 .build();
         CreateResponse response = blockingStub.create(request);
         log.info("Received response from billing service via GRPC: {}", response);
+        return response;
+    }
+
+    public ProcessPaymentResponse processPayment(UUID orderId) {
+        ProcessPaymentRequest request = ProcessPaymentRequest
+                .newBuilder()
+                .setOrderId(orderId.toString())
+                .build();
+        ProcessPaymentResponse response = blockingStub.processPayment(request);
+        log.info("Received payment response from billing service via GRPC: {}", response);
         return response;
     }
 }
