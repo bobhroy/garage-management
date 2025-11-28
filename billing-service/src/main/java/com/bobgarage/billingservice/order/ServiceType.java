@@ -6,7 +6,6 @@ import lombok.*;
 import java.math.BigDecimal;
 import java.util.UUID;
 
-@Builder
 @Getter
 @Setter
 @NoArgsConstructor
@@ -26,8 +25,7 @@ public class ServiceType {
     private String description;
 
     @Column(name = "price")
-    @Builder.Default
-    private BigDecimal price = BigDecimal.ZERO;
+    private BigDecimal price;
 
     @Column(name = "duration_minutes")
     private Integer durationMinutes = 0;

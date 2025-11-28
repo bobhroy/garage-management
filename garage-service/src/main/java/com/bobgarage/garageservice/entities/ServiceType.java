@@ -30,7 +30,7 @@ public class ServiceType {
     private BigDecimal price = BigDecimal.ZERO;
 
     @Column(name = "duration_minutes")
-    private Integer durationMinutes = 0;
+    private Integer durationMinutes;
 
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "category_id")
