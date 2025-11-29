@@ -1,0 +1,73 @@
+server:
+  port: 4004
+
+spring:
+  cloud:
+    gateway:
+      routes:
+
+        # Route 0A: Forward the Swagger UI page to the microservice
+        - id: garage-swagger-ui-page
+          uri: http://garage-service:4000
+          predicates:
+            # visit http://<gateway>/swagger/garage/
+            - Path=/swagger/garage
+          filters:
+            # send to the microservice's /swagger-ui/index.html
+            - SetPath=/swagger-ui/index.html
+
+        # Route 0B: Forward all Swagger UI static assets (css/js/png)
+        - id: garage-swagger-ui-assets
+          uri: http://garage-service:4000
+          predicates:
+            - Path=/swagger/garage/**
+          filters:
+            # strip the /swagger/garage/ prefix so assets resolve
+            - RewritePath=/swagger/garage/(?<segment>.*),/swagger-ui/${segment}
+
+        # Route 0C: Forward the OpenAPI *config* that the UI calls automatically
+        - id: garage-swagger-config
+          uri: http://garage-service:4000
+          predicates:
+            - Path=/v3/api-docs/swagger-config
+          filters:
+            - SetPath=/v3/api-docs/swagger-config
+
+        # Route 0D: Forward the OpenAPI JSON the UI loads
+        - id: garage-openapi-json
+          uri: http://garage-service:4000
+          predicates:
+            - Path=/v3/api-docs
+            - Path=/v3/api-docs/**
+
+        # Route 1: Customers Controller
+        - id: customers-route
+          uri: http://garage-service:4000
+          predicates:
+            - Path=/api/customers/**
+          filters:
+            - StripPrefix=1
+
+        # Route 2: Carts Controller
+        - id: carts-route
+          uri: http://garage-service:4000
+          predicates:
+            - Path=/api/carts/**
+          filters:
+            - StripPrefix=1
+
+        # Route 3: Orders Controller
+        - id: orders-route
+          uri: http://garage-service:4000
+          predicates:
+            - Path=/api/orders/**
+          filters:
+            - StripPrefix=1
+
+        # Route 4: Service Types Controller
+        - id: service-types-route
+          uri: http://garage-service:4000
+          predicates:
+            - Path=/api/service_types/**
+          filters:
+            - StripPrefix=1
