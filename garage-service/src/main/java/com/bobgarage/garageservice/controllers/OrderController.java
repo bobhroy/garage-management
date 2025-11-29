@@ -5,6 +5,7 @@ import com.bobgarage.garageservice.dtos.OrderDto;
 import com.bobgarage.garageservice.dtos.PayOrderRequest;
 import com.bobgarage.garageservice.exceptions.CartNotFoundException;
 import com.bobgarage.garageservice.exceptions.CustomerNotFoundException;
+import com.bobgarage.garageservice.exceptions.EmptyCartDetectedException;
 import com.bobgarage.garageservice.exceptions.OrderNotFoundException;
 import com.bobgarage.garageservice.services.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -67,5 +68,10 @@ public class OrderController {
     @ExceptionHandler(OrderNotFoundException.class)
     public ResponseEntity<Map<String, String>> handleOrderNotFound(){
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "Order not found."));
+    }
+
+    @ExceptionHandler(EmptyCartDetectedException.class)
+    public ResponseEntity<Map<String, String>> handleEmptyCartDetected(){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", "Cart is empty."));
     }
 }

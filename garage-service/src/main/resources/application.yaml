@@ -1,6 +1,11 @@
 spring:
   application:
     name: garage-service
+  kafka:
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.ByteArraySerializer
+
 #  datasource:
 #    url: jdbc:mysql://localhost:3306/garage?createDatabaseIfNotExist=true
 #    username: root
