@@ -1,5 +1,11 @@
-package com.bobgarage.userservice.entities;
+package com.bobgarage.userservice.controllers;
 
+import com.bobgarage.userservice.dtos.RegisterUserRequest;
+import com.bobgarage.userservice.dtos.UpdateUserRequest;
+import com.bobgarage.userservice.dtos.UserDto;
+import com.bobgarage.userservice.services.UserService;
+import com.bobgarage.userservice.exceptions.DuplicateUserException;
+import com.bobgarage.userservice.exceptions.UserNotFoundException;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;

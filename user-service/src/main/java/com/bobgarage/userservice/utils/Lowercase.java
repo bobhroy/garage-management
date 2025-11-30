@@ -1,4 +1,4 @@
-package com.bobgarage.userservice.entities;
+package com.bobgarage.userservice.utils;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;

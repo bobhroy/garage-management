@@ -1,4 +1,4 @@
-package com.bobgarage.userservice.entities;
+package com.bobgarage.userservice.dtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,5 +1,6 @@
-package com.bobgarage.userservice.entities;
+package com.bobgarage.userservice.dtos;
 
+import com.bobgarage.userservice.utils.Lowercase;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

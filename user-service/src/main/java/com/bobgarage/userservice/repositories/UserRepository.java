@@ -1,5 +1,6 @@
-package com.bobgarage.userservice.entities;
+package com.bobgarage.userservice.repositories;
 
+import com.bobgarage.userservice.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

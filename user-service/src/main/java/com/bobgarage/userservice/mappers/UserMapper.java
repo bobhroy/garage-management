@@ -1,5 +1,9 @@
-package com.bobgarage.userservice.entities;
+package com.bobgarage.userservice.mappers;
 
+import com.bobgarage.userservice.dtos.RegisterUserRequest;
+import com.bobgarage.userservice.dtos.UpdateUserRequest;
+import com.bobgarage.userservice.dtos.UserDto;
+import com.bobgarage.userservice.entities.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;

@@ -1,5 +1,13 @@
-package com.bobgarage.userservice.entities;
+package com.bobgarage.userservice.services;
 
+import com.bobgarage.userservice.dtos.RegisterUserRequest;
+import com.bobgarage.userservice.dtos.UpdateUserRequest;
+import com.bobgarage.userservice.dtos.UserDto;
+import com.bobgarage.userservice.entities.Role;
+import com.bobgarage.userservice.exceptions.DuplicateUserException;
+import com.bobgarage.userservice.exceptions.UserNotFoundException;
+import com.bobgarage.userservice.mappers.UserMapper;
+import com.bobgarage.userservice.repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
