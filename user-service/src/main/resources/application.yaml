@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: user-service
+  datasource:
+    url: jdbc:mysql://localhost:3307/user_db?createDatabaseIfNotExist=true
+    username: root
+    password: MyP@ssword!
+  jpa:
+    show-sql: true
+server:
+  port: 4003

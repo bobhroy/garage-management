@@ -1,0 +1,4 @@
+ALTER TABLE users
+    DROP COLUMN is_admin;
+ALTER TABLE users
+    ADD role VARCHAR(20) DEFAULT 'USER' NOT NULL;
