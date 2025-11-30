@@ -10,9 +10,11 @@ import com.bobgarage.userservice.mappers.UserMapper;
 import com.bobgarage.userservice.repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
+import java.util.UUID;
 
 @AllArgsConstructor
 @Service
@@ -20,6 +22,7 @@ public class UserService {
 
     private UserRepository userRepository;
     private UserMapper userMapper;
+    private PasswordEncoder passwordEncoder;
 
     public Iterable<UserDto> getAllUsers(String sortBy) {
         if (!Set.of("name", "email").contains(sortBy))
@@ -31,7 +34,7 @@ public class UserService {
                 .toList();
     }
 
-    public UserDto getUser(Long userId) {
+    public UserDto getUser(UUID userId) {
         var user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         return userMapper.toDto(user);
     }
@@ -42,13 +45,14 @@ public class UserService {
         }
 
         var user = userMapper.toEntity(request);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRole(Role.USER);
         userRepository.save(user);
 
         return userMapper.toDto(user);
     }
 
-    public UserDto updateUser(Long userId, UpdateUserRequest request) {
+    public UserDto updateUser(UUID userId, UpdateUserRequest request) {
         var user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         userMapper.update(request, user);
         userRepository.save(user);
@@ -56,7 +60,7 @@ public class UserService {
         return userMapper.toDto(user);
     }
 
-    public void deleteUser(Long userId) {
+    public void deleteUser(UUID userId) {
         var user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         userRepository.delete(user);
     }

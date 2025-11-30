@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @AllArgsConstructor
@@ -28,7 +29,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public UserDto getUser(@PathVariable Long id) {
+    public UserDto getUser(@PathVariable UUID id) {
         return userService.getUser(id);
     }
 
@@ -44,13 +45,13 @@ public class UserController {
 
     @PutMapping("/{id}")
     public UserDto updateUser(
-            @PathVariable(name = "id") Long id,
+            @PathVariable(name = "id") UUID id,
             @RequestBody UpdateUserRequest request) {
         return userService.updateUser(id, request);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteUser(@PathVariable Long id) {
+    public void deleteUser(@PathVariable UUID id) {
         userService.deleteUser(id);
     }
 
