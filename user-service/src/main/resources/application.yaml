@@ -2,7 +2,7 @@ spring:
   application:
     name: user-service
 jwt:
-  secret: Ub0xySfmMwUWcA7Hp1uKL0TNuH7L4gX6/yCBvtUXCDZw5XXa9AbNkG56GrGp3MfKaJkLHDmXOArJh/mESsvqcg==
+  secret: ${JWT_SECRET} #set Docker Run Option "--env-file ./.env.example"
 #  datasource:
 #    url: jdbc:mysql://localhost:3307/user_db?createDatabaseIfNotExist=true
 #    username: root
