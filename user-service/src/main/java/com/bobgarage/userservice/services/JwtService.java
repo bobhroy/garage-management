@@ -5,7 +5,6 @@ import com.bobgarage.userservice.entities.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.Keys;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,15 +16,15 @@ import java.util.UUID;
 public class JwtService {
     private final JwtConfig jwtConfig;
 
-    public String generaAccessToken(User user) {
-        return generaToken(user, jwtConfig.getAccessTokenExpiration());
+    public String generateAccessToken(User user) {
+        return generateToken(user, jwtConfig.getAccessTokenExpiration());
     }
 
     public String generateRefreshToken(User user) {
-        return generaToken(user, jwtConfig.getRefreshTokenExpiration());
+        return generateToken(user, jwtConfig.getRefreshTokenExpiration());
     }
 
-    private String generaToken(User user, long TOKEN_EXPIRATION_TIME) {
+    private String generateToken(User user, long TOKEN_EXPIRATION_TIME) {
         return Jwts.builder()
                 .subject(user.getId().toString())
                 .claim("email", user.getEmail())
