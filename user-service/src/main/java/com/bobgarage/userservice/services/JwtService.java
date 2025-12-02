@@ -1,7 +1,6 @@
 package com.bobgarage.userservice.services;
 
 import com.bobgarage.userservice.config.JwtConfig;
-import com.bobgarage.userservice.entities.Role;
 import com.bobgarage.userservice.entities.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
@@ -10,40 +9,39 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
-import java.util.UUID;
 
 @AllArgsConstructor
 @Service
 public class JwtService {
     private final JwtConfig jwtConfig;
 
-    public String generateAccessToken(User user) {
+    public Jwt generateAccessToken(User user) {
         return generateToken(user, jwtConfig.getAccessTokenExpiration());
     }
 
-    public String generateRefreshToken(User user) {
+    public Jwt generateRefreshToken(User user) {
         return generateToken(user, jwtConfig.getRefreshTokenExpiration());
     }
 
-    private String generateToken(User user, long TOKEN_EXPIRATION_TIME) {
-        return Jwts.builder()
+    private Jwt generateToken(User user, long TOKEN_EXPIRATION_TIME) {
+        var claims = Jwts.claims()
                 .subject(user.getId().toString())
-                .claim("email", user.getEmail())
-                .claim("name", user.getName())
-                .claim("role", user.getRole().toString())
+                .add("email", user.getEmail())
+                .add("name", user.getName())
+                .add("role", user.getRole())
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + 1000 * TOKEN_EXPIRATION_TIME))
-                .signWith(jwtConfig.getSecretKey())
-                .compact();
+                .build();
+
+        return new Jwt(claims, jwtConfig.getSecretKey());
     }
 
-    public boolean validateToken(String token){
-        try{
+    public Jwt parseToken(String token) {
+        try {
             var claims = getClaims(token);
-            return claims.getExpiration().after(new Date());
-        }
-        catch(JwtException e){
-            return false;
+            return new Jwt(claims, jwtConfig.getSecretKey());
+        } catch (JwtException e) {
+            return null;
         }
     }
 
@@ -53,13 +51,5 @@ public class JwtService {
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
-    }
-
-    public UUID getUserIdFromToken(String token) {
-        return UUID.fromString(getClaims(token).getSubject());
-    }
-
-    public Role getRoleFromToken(String token) {
-        return Role.valueOf(getClaims(token).get("role", String.class));
     }
 }
