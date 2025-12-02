@@ -1,26 +1,38 @@
 package com.bobgarage.userservice.services;
 
+import com.bobgarage.userservice.config.JwtConfig;
+import com.bobgarage.userservice.entities.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
-import org.springframework.beans.factory.annotation.Value;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.UUID;
 
+@AllArgsConstructor
 @Service
 public class JwtService {
-    @Value("${jwt.secret}")
-    private String secret;
+    private final JwtConfig jwtConfig;
 
-    public String generateToken(String email) {
-        final long TOKEN_EXPIRATION_TIME = 86400;
+    public String generaAccessToken(User user) {
+        return generaToken(user, jwtConfig.getAccessTokenExpiration());
+    }
+
+    public String generateRefreshToken(User user) {
+        return generaToken(user, jwtConfig.getRefreshTokenExpiration());
+    }
+
+    private String generaToken(User user, long TOKEN_EXPIRATION_TIME) {
         return Jwts.builder()
-                .subject(email)
+                .subject(user.getId().toString())
+                .claim("email", user.getEmail())
+                .claim("name", user.getName())
                 .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + 1000 * TOKEN_EXPIRATION_TIME ))
-                .signWith(Keys.hmacShaKeyFor(secret.getBytes()))
+                .expiration(new Date(System.currentTimeMillis() + 1000 * TOKEN_EXPIRATION_TIME))
+                .signWith(jwtConfig.getSecretKey())
                 .compact();
     }
 
@@ -36,13 +48,13 @@ public class JwtService {
 
     private Claims getClaims(String token) {
         return Jwts.parser()
-                .verifyWith(Keys.hmacShaKeyFor(secret.getBytes()))
+                .verifyWith(jwtConfig.getSecretKey())
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
     }
 
-    public String getEmailFromToken(String token) {
-        return getClaims(token).getSubject();
+    public UUID getUserIdFromToken(String token) {
+        return UUID.fromString(getClaims(token).getSubject());
     }
 }
