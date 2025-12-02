@@ -10,6 +10,7 @@ CREATE TABLE users
     CONSTRAINT `uc_email` UNIQUE (email) -- Ensures email is unique
 );
 
+-- This is a sample admin account for testing.
 INSERT INTO users (id, name, email, password, role)
 VALUES (
            UUID_TO_BIN('123e4567-e89b-12d3-a456-426614174000'),
@@ -18,6 +19,6 @@ VALUES (
            -- This is a sample bcrypt hash for 'password123'.
            -- The application will use a library (like bcrypt) to generate this hash
            -- based on the user's input before running this query.
-           '$2y$10$eE0k9vB4Z1sXyC0g7lR6u./4n0.3a2T5yV7q1r8s9t0u1v2w3x4y5z6a7b',
+           '$2a$10$S8j0HKAyseB6cSTpYam8euc9jvfNV3WUb1b4n5huBe7Q0XllsWpMG',
            'ADMIN'
        );
