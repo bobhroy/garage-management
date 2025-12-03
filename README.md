@@ -68,6 +68,15 @@ SPRING_JPA_HIBERNATE_DDL_AUTO=update
 SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
 SPRING_SQL_INIT_MODE=always
 ```
+🗄️ Garage Service Database
+
+The Garage Service uses a MySQL container as its persistent data store.
+
+Database Environment Variables:
+```env
+MYSQL_DATABASE=db
+MYSQL_ROOT_PASSWORD=MyP@ssword!
+```
 
 ### 2. 💳 Billing Service
 **Description:**  
@@ -133,6 +142,16 @@ The secret should be a securely generated, hashed, or long random key.
 
 JWT_SECRET=<put_a_hashed_key_for_encoding>
 
+🗄️ User Service Database
+
+The User Service uses a dedicated MySQL database container to manage user data and authentication details.
+
+Database Environment Variables:
+```env
+MYSQL_DATABASE=user_db
+MYSQL_ROOT_PASSWORD=MyP@ssword!
+```
+
 ### 5. 🌐 API Gateway
 **Description:**  
 The **API Gateway** acts as the single entry point for all client requests.  
@@ -196,8 +215,6 @@ KAFKA_NODE_ID=1
 KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
 KAFKA_PROCESS_ROLES=broker,controller
 ```
-
-
 
 
 
